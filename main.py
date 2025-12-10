@@ -410,7 +410,6 @@ def get_latest_merged_pr():
                 return pr
     else:
         print("Unexpected response format:", pr_list)
-
     return None
 
 def map_pr_to_folder(pr_title):
@@ -438,6 +437,7 @@ def format_size(size):
 
 def find_scripts_in_folder(folder):
     """Find and print files and folders in the specified directory with their sizes."""
+    requirements_found = False
     if os.path.exists(folder) and os.path.isdir(folder):
         items = os.listdir(folder)
         for item in items:
@@ -451,9 +451,10 @@ def find_scripts_in_folder(folder):
             elif item.endswith('.py'):
                 print(f"{item:<15} - File       - {format_size(item_size)}")
             elif item == 'requirements.txt':
+                requirements_found = True  # Found requirements.txt
                 print(f"{item:<15} - File       - {format_size(item_size)}")  # Print requirements.txt
 
-        return 'requirements.txt' in items  # Return True if requirements.txt is found
+        return requirements_found  # Return True if requirements.txt is found
     else:
         print(f"{folder} - Folder does not exist")
         return False
@@ -473,7 +474,7 @@ def install_requirements(folder):
         subprocess.run([env_path, 'install', '-r', requirements_path], check=True)
         print("Requirements installed from requirements.txt.")
     else:
-        print("requirements.txt file not found.")
+        print("No requirements.txt file found in the directory.")
 
 def main():
     latest_pr = get_latest_merged_pr()
