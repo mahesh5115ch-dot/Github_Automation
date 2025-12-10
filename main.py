@@ -156,9 +156,10 @@ def get_latest_merged_pr():
 #     return folder_name
 
 def map_pr_to_folder(pr_title):
-    # This function dynamically maps PR titles to folders
-    # You can customize this function to match your folder naming conventions
-    folder_name = pr_title.lower().replace(' ', '_')  # Example: 'Feature A' becomes 'feature_a'
+    # Extract the prefix before any space or extra text
+    folder_name = pr_title.split(' ')[0]  # Gets the first word or phrase before space
+    # folder_name = folder_name.lower().replace(' ', '_')  # Convert to lowercase and replace spaces with underscores
+    folder_name = folder_name.replace(' ', '_') 
     return folder_name
 
 def find_script_in_folder(folder):
