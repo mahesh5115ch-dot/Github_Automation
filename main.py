@@ -227,7 +227,7 @@ def get_latest_merged_pr():
     return None
 
 def map_pr_to_folder(pr_title):
-    # Extract the prefix before any space or extra text
+    # Extract the folder name from the PR title
     folder_name = pr_title.split(' ')[0]  # Gets the first word or phrase before space
     folder_name = folder_name.replace(' ', '_') 
     return folder_name
@@ -242,7 +242,7 @@ def find_scripts_in_folder(folder):
                 print(f"{item} - Folder")
                 # Check specifically for the 'venv' folder
                 if item == 'venv':
-                    print("venv - Folder")  # Indicate that the venv folder was found
+                    continue  # Skip printing the venv folder again
             elif item.endswith('.py'):
                 print(f"{item} - File")
     else:
@@ -264,10 +264,12 @@ def main():
         folder = map_pr_to_folder(pr_title)
         print(f"Checking folder: {folder}")
         
-        # Create virtual environment inside the Automation folder
-        create_virtual_environment(folder, 'venv')
-        
-        find_scripts_in_folder(folder)
+        # Only create the virtual environment if the folder exists
+        if os.path.exists(folder):
+            create_virtual_environment(folder, 'venv')
+            find_scripts_in_folder(folder)
+        else:
+            print(f"Folder '{folder}' does not exist. No virtual environment created.")
     else:
         print("No merged PR found.")
 
