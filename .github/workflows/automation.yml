@@ -1,0 +1,25 @@
+name: Run Automation
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  run_automation:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out the repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: |
+        pip install requests
+
+    - name: Run automation script
+      run: python main.py
