@@ -228,7 +228,6 @@ def get_latest_merged_pr():
     return None
 
 def map_pr_to_folder(pr_title):
-    # Extract the prefix before any space or extra text
     folder_name = pr_title.split(' ')[0]  # Gets the first word or phrase before space
     folder_name = folder_name.replace(' ', '_') 
     return folder_name
@@ -241,6 +240,9 @@ def find_scripts_in_folder(folder):
             item_path = os.path.join(folder, item)
             if os.path.isdir(item_path):
                 print(f"{item} - Folder")
+                # Check specifically for 'venv' folder
+                if item == 'venv':
+                    print("venv - Folder")  # Indicate that the venv folder was found
             elif item.endswith('.py'):
                 print(f"{item} - File")
     else:
