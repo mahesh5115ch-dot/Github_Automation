@@ -1,1 +1,1 @@
-print("Inside Automation 2")
+print("Automation 2")
