@@ -196,7 +196,6 @@
 #     main()
 
 #############################################################
-
 import os
 import requests
 import subprocess
@@ -228,19 +227,20 @@ def get_latest_merged_pr():
     return None
 
 def map_pr_to_folder(pr_title):
+    # Extract the prefix before any space or extra text
     folder_name = pr_title.split(' ')[0]  # Gets the first word or phrase before space
     folder_name = folder_name.replace(' ', '_') 
     return folder_name
 
 def find_scripts_in_folder(folder):
-    # Check if folder exists
+    # Check if the folder exists
     if os.path.exists(folder) and os.path.isdir(folder):
         items = os.listdir(folder)
         for item in items:
             item_path = os.path.join(folder, item)
             if os.path.isdir(item_path):
                 print(f"{item} - Folder")
-                # Check specifically for 'venv' folder
+                # Check specifically for the 'venv' folder
                 if item == 'venv':
                     print("venv - Folder")  # Indicate that the venv folder was found
             elif item.endswith('.py'):
@@ -248,17 +248,13 @@ def find_scripts_in_folder(folder):
     else:
         print(f"{folder} - Folder does not exist")
 
-def create_virtual_environment(env_name):
-    # Create a virtual environment
-    subprocess.run(['python', '-m', 'venv', env_name], check=True)
-    print(f"Virtual environment '{env_name}' created.")
+def create_virtual_environment(folder, env_name):
+    # Create a virtual environment in the specified folder
+    env_path = os.path.join(folder, env_name)
+    subprocess.run(['python', '-m', 'venv', env_path], check=True)
+    print(f"Virtual environment '{env_name}' created in '{folder}'.")
 
 def main():
-    env_name = 'venv'
-    
-    # Create virtual environment
-    create_virtual_environment(env_name)
-    
     latest_pr = get_latest_merged_pr()
     
     if latest_pr:
@@ -267,6 +263,9 @@ def main():
 
         folder = map_pr_to_folder(pr_title)
         print(f"Checking folder: {folder}")
+        
+        # Create virtual environment inside the Automation folder
+        create_virtual_environment(folder, 'venv')
         
         find_scripts_in_folder(folder)
     else:
