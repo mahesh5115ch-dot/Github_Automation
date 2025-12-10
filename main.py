@@ -9,14 +9,24 @@ API_URL = f'https://api.github.com/repos/{REPO}/pulls'
 def get_latest_merged_pr():
     headers = {'Authorization': f'token {GITHUB_TOKEN}'}
     params = {'state': 'closed', 'sort': 'updated', 'direction': 'desc'}
-    
+
     response = requests.get(API_URL, headers=headers, params=params)
-    pr_list = response.json()
     
-    # Find the latest merged PR
-    for pr in pr_list:
-        if pr.get('merged_at'):
-            return pr
+    # Check if the response was successful
+    if response.status_code != 200:
+        print(f"Error fetching PRs: {response.status_code}, {response.text}")
+        return None
+
+    pr_list = response.json()
+
+    # Check if the response is a list and find the latest merged PR
+    if isinstance(pr_list, list):
+        for pr in pr_list:
+            if isinstance(pr, dict) and pr.get('merged_at'):
+                return pr
+    else:
+        print("Unexpected response format:", pr_list)
+    
     return None
 
 def run_automation(folder):
