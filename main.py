@@ -92,7 +92,8 @@ def get_latest_merged_pr():
 def map_pr_to_folder(pr_title):
     # Extract the prefix before any space or extra text
     folder_name = pr_title.split(' ')[0]  # Gets the first word or phrase before space
-    folder_name = folder_name.lower().replace(' ', '_')  # Convert to lowercase and replace spaces with underscores
+    # folder_name = folder_name.lower().replace(' ', '_')  # Convert to lowercase and replace spaces with underscores
+    folder_name = folder_name.replace(' ', '_') 
     return folder_name
 
 def run_automation(folder):
